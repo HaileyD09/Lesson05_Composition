@@ -16,8 +16,8 @@ public record Creature
     public int Strength { get; }
     public int Dexterity { get; }
     public int Constitution { get; }
-    public int Intelligence { get; }
-    public int Wisdom { get; }
+    public int Intelligence { get; } //knowing what it is
+    public int Wisdom { get; } //knowing why it isit
     public int Charisma { get; }
 
     /// <summary>Experience the party earns for defeating it.</summary>
