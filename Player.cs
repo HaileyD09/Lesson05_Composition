@@ -1,5 +1,3 @@
-
-
 namespace Toolkit;
 
 /// <summary>
@@ -13,18 +11,10 @@ namespace Toolkit;
 public record Player
 {
     public string Name { get; }
-    
     public PlayerLevel Level { get; }
-    
     public HealthPoints HealthPoints { get; }
-    
-    public AbilityScore AbilityScore { get; }
-    
-    public Money MyWallet { get; }
-
     public AbilityScore Abilities { get; }
-
-    public int Gold { get; }
+    public Money MyWallet { get; }
 
     private Player(string name, PlayerLevel level, HealthPoints healthPoints, AbilityScore abilities, Money myWallet)
     {
@@ -32,33 +22,26 @@ public record Player
         Level = level;
         HealthPoints = healthPoints;
         Abilities = abilities;
-        myWallet = myWallet;
+        MyWallet = myWallet;
+    }
 
-        /// <summary>
-        /// Builds a player, or refuses to.  Every player in the program comes
-        /// through here.
-        /// </summary>
-        public static Player Create(string name,
-            int strength, int dexterity, int constitution,
-            int intelligence, int wisdom, int charisma,
-            int gold)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("A player needs a name.", nameof(name));
+    /// <summary>
+    /// Builds a player, or refuses to.  Every player in the program comes
+    /// through here.
+    /// </summary>
+    public static Player Create(string name,
+        int strength, int dexterity, int constitution,
+        int intelligence, int wisdom, int charisma)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("A player needs a name.", nameof(name));
 
-            var level = PlayerLevel.Level1;
-
-            var healthPoints = HealthPoints.Create(20);
-
-            var stats = AbilityScore.Create(strength, dexterity, constitution, intelligence, wisdom, charisma)
+        var level = PlayerLevel.Default;
+        var healthPoints = HealthPoints.Create(20);
+        var abilities = AbilityScore.Create(strength, dexterity, constitution, intelligence, wisdom, charisma)
                         ?? AbilityScore.Create(10, 10, 10, 10, 10, 10)!;
-            
-            
-            var gold = Money.Default;
-            
+        var wallet = Money.Default;
 
-
-            return new Player(name, level, healthPoints, stats gold);
-        }
+        return new Player(name, level, healthPoints, abilities, wallet);
     }
 }

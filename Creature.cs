@@ -13,31 +13,20 @@ public record Creature
     public int CurrentHealth { get; }
     public int MaxHealth { get; }
 
-    public int Strength { get; }
-    public int Dexterity { get; }
-    public int Constitution { get; }
-    public int Intelligence { get; } //knowing what it is
-    public int Wisdom { get; } //knowing why it isit
-    public int Charisma { get; }
+    public AbilityScore Abilities { get; }
 
     /// <summary>Experience the party earns for defeating it.</summary>
     public int ExperienceReward { get; }
 
     private Creature(string name,
         int currentHealth, int maxHealth,
-        int strength, int dexterity, int constitution,
-        int intelligence, int wisdom, int charisma,
+        AbilityScore abilities,
         int experienceReward)
     {
         Name = name;
         CurrentHealth = currentHealth;
         MaxHealth = maxHealth;
-        Strength = strength;
-        Dexterity = dexterity;
-        Constitution = constitution;
-        Intelligence = intelligence;
-        Wisdom = wisdom;
-        Charisma = charisma;
+        Abilities = abilities;
         ExperienceReward = experienceReward;
     }
 
@@ -45,10 +34,9 @@ public record Creature
     /// Builds a creature, or refuses to.  Every creature in the program comes
     /// through here.
     /// </summary>
-    public static Creature Create(string name,
+    public static Creature? Create(string name,
         int currentHealth, int maxHealth,
-        int strength, int dexterity, int constitution,
-        int intelligence, int wisdom, int charisma,
+        AbilityScore? abilities,
         int experienceReward)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -63,29 +51,8 @@ public record Creature
                 nameof(currentHealth), currentHealth,
                 $"Current health runs from 0 to max health ({maxHealth}).");
 
-        if (strength < 3 || strength > 18)
-            throw new ArgumentOutOfRangeException(
-                nameof(strength), strength, "Ability scores run from 3 to 18.");
-
-        if (dexterity < 3 || dexterity > 18)
-            throw new ArgumentOutOfRangeException(
-                nameof(dexterity), dexterity, "Ability scores run from 3 to 18.");
-
-        if (constitution < 3 || constitution > 18)
-            throw new ArgumentOutOfRangeException(
-                nameof(constitution), constitution, "Ability scores run from 3 to 18.");
-
-        if (intelligence < 3 || intelligence > 18)
-            throw new ArgumentOutOfRangeException(
-                nameof(intelligence), intelligence, "Ability scores run from 3 to 18.");
-
-        if (wisdom < 3 || wisdom > 18)
-            throw new ArgumentOutOfRangeException(
-                nameof(wisdom), wisdom, "Ability scores run from 3 to 18.");
-
-        if (charisma < 3 || charisma > 18)
-            throw new ArgumentOutOfRangeException(
-                nameof(charisma), charisma, "Ability scores run from 3 to 18.");
+        if (abilities is null)
+            throw new ArgumentNullException(nameof(abilities), "Abilities are required.");
 
         if (experienceReward < 0)
             throw new ArgumentOutOfRangeException(
@@ -94,8 +61,7 @@ public record Creature
 
         return new Creature(name,
             currentHealth, maxHealth,
-            strength, dexterity, constitution,
-            intelligence, wisdom, charisma,
+            abilities,
             experienceReward);
     }
 }
